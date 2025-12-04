@@ -105,10 +105,8 @@ function Header({ darkMode, toggleTheme, toggleSidebar }: HeaderProps) {
           <Menu className="w-6 h-6" />
         </button>
         <div className="flex items-center gap-1 cursor-pointer">
-          <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
-            <PlaySquare size={20} fill="white" stroke="white" />
-          </div>
-          <span className="text-xl font-bold tracking-tighter hidden sm:block">AluraTube</span>
+          
+          <img src="../src/assets/imagens/Logo.png"/>
         </div>
       </div>
 

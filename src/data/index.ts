@@ -3,7 +3,19 @@ export const CATEGORIES = [
   "Tailwind CSS", "Podcasts", "Games", "Live", "Música"
 ];
 
-export const VIDEOS = [
+export interface Video {
+  id: number;
+  title: string;
+  channel: string;
+  views: string;
+  time: string;
+  duration: string;
+  thumbnail: string;
+  subscribers: string; // Novo
+  description: string; // Novo
+}
+
+export const VIDEOS: Video[] = [
   {
     id: 1,
     title: "Como criar um clone do YouTube com React e Tailwind",
@@ -11,7 +23,9 @@ export const VIDEOS = [
     views: "125 mil",
     time: "há 2 dias",
     duration: "14:20",
-    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
+    subscribers: "450 mil",
+    description: "Aprenda a construir interfaces modernas com a stack mais usada do mercado."
   },
   {
     id: 2,
@@ -20,7 +34,9 @@ export const VIDEOS = [
     views: "85 mil",
     time: "há 5 horas",
     duration: "10:05",
-    thumbnail: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=80",
+    subscribers: "120 mil",
+    description: "TypeScript sem enrolação. Tipagem forte para projetos robustos."
   },
   {
     id: 3,
@@ -29,7 +45,9 @@ export const VIDEOS = [
     views: "2.1 mi",
     time: "há 1 semana",
     duration: "25:12",
-    thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+    subscribers: "1.2 mi",
+    description: "Veja os equipamentos que utilizo no meu dia a dia de desenvolvimento."
   },
   {
     id: 4,
@@ -38,7 +56,9 @@ export const VIDEOS = [
     views: "45 mil",
     time: "há 3 dias",
     duration: "18:30",
-    thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+    subscribers: "89 mil",
+    description: "Comparativo completo de performance e produtividade."
   },
   {
     id: 5,
@@ -47,7 +67,9 @@ export const VIDEOS = [
     views: "300 mil",
     time: "há 1 mês",
     duration: "45:00",
-    thumbnail: "https://images.unsplash.com/photo-1618477247222-ac5912453634?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1618477247222-ac5912453634?w=800&q=80",
+    subscribers: "500 mil",
+    description: "Curso crash course de Next.js com App Router."
   },
   {
     id: 6,
@@ -56,7 +78,9 @@ export const VIDEOS = [
     views: "Live",
     time: "agora",
     duration: "LIVE",
-    thumbnail: "https://images.unsplash.com/photo-1516280440614-6697288d5d38?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1516280440614-6697288d5d38?w=800&q=80",
+    subscribers: "12 mi",
+    description: "Beats para relaxar e estudar."
   },
   {
     id: 7,
@@ -65,7 +89,9 @@ export const VIDEOS = [
     views: "15 mil",
     time: "há 4 dias",
     duration: "1:20:00",
-    thumbnail: "https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?w=800&q=80",
+    subscribers: "180 mil",
+    description: "Fundamentos da plataforma .NET da Microsoft."
   },
   {
     id: 8,
@@ -74,6 +100,8 @@ export const VIDEOS = [
     views: "500 mil",
     time: "há 2 semanas",
     duration: "12:45",
-    thumbnail: "https://images.unsplash.com/photo-1627398242450-270170589295?w=800&q=80"
+    thumbnail: "https://images.unsplash.com/photo-1627398242450-270170589295?w=800&q=80",
+    subscribers: "300 mil",
+    description: "WebAssembly vai substituir o JS? Entenda a polêmica."
   }
 ];
