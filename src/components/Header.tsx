@@ -1,57 +1,110 @@
-import { Search, Bell, Moon, Sun, Menu, Mic, PlaySquare } from 'lucide-react';
+import { Search, Bell, User, Moon, Sun, Menu } from 'lucide-react'
+import { useState } from 'react'
+import Button from './Button'
 
 interface HeaderProps {
-  darkMode: boolean;
-  toggleTheme: () => void;
-  toggleSidebar: () => void;
+  darkMode: boolean
+  onToggleDarkMode: () => void
+  onSearch: (query: string) => void
 }
 
-export function Header({ darkMode, toggleTheme, toggleSidebar }: HeaderProps) {
+export default function Header({ darkMode, onToggleDarkMode, onSearch }: HeaderProps) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSearch(searchQuery)
+  }
+  
   return (
-    <header className="fixed top-0 left-0 right-0 h-14 bg-white dark:bg-[#0f0f0f] flex items-center justify-between px-4 z-50 border-b border-gray-200 dark:border-gray-800">
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={toggleSidebar}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-        <div className="flex items-center gap-1 cursor-pointer">
-          <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
-            <PlaySquare size={20} fill="white" stroke="white" />
-          </div>
-          <span className="text-xl font-bold tracking-tighter hidden sm:block">AluraTube</span>
-        </div>
-      </div>
-
-      <div className="hidden md:flex flex-1 max-w-2xl mx-4">
-        <div className="flex w-full group focus-within:shadow-sm">
-          <input 
-            type="text" 
-            placeholder="Pesquisar" 
-            className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-l-full px-4 py-2 focus:outline-none focus:border-blue-500 dark:bg-[#121212] transition-colors"
-          />
-          <button className="bg-gray-100 dark:bg-gray-800 border border-l-0 border-gray-300 dark:border-gray-700 rounded-r-full px-5 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-            <Search className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+      <div className="flex items-center justify-between gap-4">
+        {/* Logo e Menu Mobile */}
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg lg:hidden"
+          >
+            <Menu className="w-5 h-5" />
           </button>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">A</span>
+            </div>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              AluraTube
+            </h1>
+          </div>
         </div>
-        <button className="ml-4 p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-          <Mic className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <button onClick={toggleTheme} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-          {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-        </button>
-        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full hidden sm:block transition-colors relative">
-          <Bell className="w-6 h-6" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full border-2 border-white dark:border-[#0f0f0f]"></span>
-        </button>
-        <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium ml-2 cursor-pointer hover:bg-purple-700 transition-colors">
-          G
+        
+        {/* Barra de Pesquisa */}
+        <form onSubmit={handleSearch} className="flex-1 max-w-2xl hidden md:block">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Buscar vídeos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          </div>
+        </form>
+        
+        {/* Ações do Usuário */}
+        <div className="flex items-center gap-2">
+          {/* Pesquisa Mobile */}
+          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg md:hidden">
+            <Search className="w-5 h-5" />
+          </button>
+          
+          {/* Tema */}
+          <button
+            onClick={onToggleDarkMode}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            title={darkMode ? 'Modo Claro' : 'Modo Escuro'}
+          >
+            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          
+          {/* Notificações */}
+          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg relative">
+            <Bell className="w-5 h-5" />
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+              3
+            </span>
+          </button>
+          
+          {/* Botão Entrar */}
+          <Button variant="outline" className="hidden sm:flex">
+            <User className="w-4 h-4 mr-2" />
+            Entrar
+          </Button>
+          
+          {/* Avatar */}
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center cursor-pointer">
+            <span className="text-white font-semibold">C</span>
+          </div>
         </div>
       </div>
+      
+      {/* Menu Mobile */}
+      {showMobileMenu && (
+        <div className="mt-3 md:hidden">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Buscar vídeos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          </div>
+        </div>
+      )}
     </header>
-  );
+  )
 }
