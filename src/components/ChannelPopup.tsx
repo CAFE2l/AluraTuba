@@ -1,6 +1,7 @@
 import { X, Bell, Check } from 'lucide-react';
 import Button from './Button';
-// Interface mantida no mesmo arquivo para evitar erros de importação
+import { useEffect, useState } from 'react';
+
 export interface Video {
   id: number;
   title: string;
@@ -15,17 +16,40 @@ export interface Video {
 }
 
 interface ChannelPopupProps {
-  video: Video;
+  video: Video | null;
+  isOpen: boolean;
   onClose: () => void;
   onSubscribe?: () => void;
 }
 
-export function ChannelPopup({ video, onClose, onSubscribe }: ChannelPopupProps) {
+export function ChannelPopup({ 
+  video, 
+  isOpen, 
+  onClose, 
+  onSubscribe 
+}: ChannelPopupProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Pequeno delay para garantir a animação
+      setTimeout(() => setIsVisible(true), 10);
+      // Bloquear scroll do body
+      document.body.style.overflow = 'hidden';
+    } else {
+      setIsVisible(false);
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const handleSubscribe = () => {
     if (onSubscribe) {
       onSubscribe();
     }
-    // Aqui você pode adicionar lógica de inscrição
   };
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,22 +58,42 @@ export function ChannelPopup({ video, onClose, onSubscribe }: ChannelPopupProps)
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  // Não renderizar se não estiver aberto
+  if (!isOpen || !video) return null;
+
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+        isVisible 
+          ? 'bg-black/60 backdrop-blur-sm opacity-100' 
+          : 'bg-transparent backdrop-blur-0 opacity-0'
+      }`}
       onClick={handleOutsideClick}
+      onKeyDown={handleKeyDown}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="channel-popup-title"
     >
-      {/* Card do Popup com animação */}
+      {/* Card do Popup */}
       <div 
-        className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scaleIn relative border border-gray-200 dark:border-gray-800"
+        className={`bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transition-all duration-300 transform ${
+          isVisible 
+            ? 'scale-100 opacity-100' 
+            : 'scale-95 opacity-0'
+        } relative border border-gray-200 dark:border-gray-800`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabeçalho com gradiente */}
         <div className="h-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 relative">
-          {/* Botão Fechar */}
           <button 
             onClick={onClose}
-            className="absolute top-3 right-3 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="absolute top-3 right-3 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
             aria-label="Fechar popup"
           >
             <X className="w-5 h-5" />
@@ -66,9 +110,13 @@ export function ChannelPopup({ video, onClose, onSubscribe }: ChannelPopupProps)
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${video.channel}&backgroundColor=3b82f6&radius=50`} 
                   alt={`Avatar do canal ${video.channel}`}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback para imagem quebrada
+                    const target = e.target as HTMLImageElement;
+                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(video.channel)}&background=3b82f6&color=fff&bold=true`;
+                  }}
                 />
               </div>
-              {/* Badge verificado */}
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
                 <Check className="w-3 h-3 text-white" />
               </div>
@@ -86,7 +134,10 @@ export function ChannelPopup({ video, onClose, onSubscribe }: ChannelPopupProps)
           {/* Informações do canal */}
           <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 
+                id="channel-popup-title"
+                className="text-xl font-bold text-gray-900 dark:text-white"
+              >
                 {video.channel}
               </h2>
               <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
